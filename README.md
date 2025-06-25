@@ -1,6 +1,6 @@
 # 🧠 BCB - Big Chat Brasil (Teste Técnico Backend)
 
-Este é um sistema de **mensageria com fila de priorização**, criado como parte de um teste técnico para backend. Ele simula o envio de mensagens entre empresas (clientes) e usuários, com controle de saldo ou limite, priorização de mensagens e processamento síncrono em memória.
+Este é um sistema de **mensageria com fila de priorização**. Ele simula o envio de mensagens entre empresas (clientes) e usuários, com controle de saldo ou limite, priorização de mensagens e processamento síncrono em memória.
 
 ---
 
