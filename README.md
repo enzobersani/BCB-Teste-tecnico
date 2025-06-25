@@ -82,7 +82,7 @@ x-client-doc: 12345678900
 Após iniciar o projeto, acesse a documentação em:
 
 ```
-http://localhost:3000/api
+http://localhost:3000/swagger
 ```
 
 ---
