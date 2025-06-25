@@ -1,3 +1,162 @@
+# 🧠 BCB - Big Chat Brasil (Teste Técnico Backend)
+
+Este é um sistema de **mensageria com fila de priorização**, criado como parte de um teste técnico para backend. Ele simula o envio de mensagens entre empresas (clientes) e usuários, com controle de saldo ou limite, priorização de mensagens e processamento síncrono em memória.
+
+---
+
+## 🚀 Tecnologias Utilizadas
+
+- [NestJS](https://nestjs.com/)
+- [TypeORM](https://typeorm.io/)
+- [PostgreSQL](https://www.postgresql.org/)
+- [Docker & Docker Compose](https://docs.docker.com/)
+- [Swagger](https://swagger.io/tools/swagger-ui/)
+
+---
+
+## 📁 Estrutura de Pastas
+
+```
+src/
+├── auth/               # Autenticação por CPF/CNPJ via header
+├── clients/            # Cadastro e gestão de clientes
+├── conversations/      # Histórico de conversas entre cliente e usuário
+├── messages/           # Envio e status de mensagens
+├── queue/              # Fila de processamento com priorização
+├── common/             # Pipes, decorators e helpers
+├── main.ts             # Bootstrap da aplicação
+├── app.module.ts       # Módulo raiz
+```
+
+---
+
+## 📜 Regras de Negócio
+
+- Clientes são PF ou PJ e possuem um **plano** (pré-pago ou pós-pago).
+- Mensagens podem ser **normais (R$0,25)** ou **urgentes (R$0,50)**.
+- Validação de saldo/limite antes do envio.
+- Fila síncrona em memória com processamento ordenado:
+  - Urgentes têm prioridade.
+  - Até 3 urgentes consecutivas antes de intercalar com uma normal.
+- Conversas são atualizadas automaticamente ao enviar mensagens.
+- Suporte ao reprocessamento automático em caso de falhas.
+
+---
+
+## 📦 Instalação Local
+
+### Pré-requisitos
+
+- Docker + Docker Compose
+- Node.js 18+
+
+### 1. Clone o repositório
+
+```bash
+git clone https://github.com/enzobersani/BCB-Teste-tecnico.git
+cd BCB-Teste-tecnico
+```
+
+### 2. Suba os containers com Docker Compose
+
+```bash
+docker-compose up --build
+```
+
+> Isso irá iniciar a API e o banco PostgreSQL localmente na porta 5432.
+
+---
+
+## 🔐 Autenticação
+
+As requisições precisam de um header com o documento do cliente:
+
+```
+x-client-doc: 12345678900
+```
+
+---
+
+## 📖 Documentação Swagger
+
+Após iniciar o projeto, acesse a documentação em:
+
+```
+http://localhost:3000/api
+```
+
+---
+
+## 🧪 Endpoints Principais
+
+### 📌 Autenticação e Clientes
+
+| Método | Rota                        | Descrição                       |
+|--------|-----------------------------|---------------------------------|
+| POST   | `/auth`                     | Autenticação por CPF/CNPJ       |
+| GET    | `/clients`                  | Lista todos os clientes         |
+| POST   | `/clients`                  | Cria um novo cliente            |
+| GET    | `/clients/:id`              | Detalhes de um cliente          |
+| PUT    | `/clients/:id`              | Atualiza cliente                |
+| GET    | `/clients/:id/balance`      | Saldo ou limite do cliente      |
+
+### 🗨️ Mensagens
+
+| Método | Rota                     | Descrição                         |
+|--------|--------------------------|-----------------------------------|
+| POST   | `/messages`              | Envia nova mensagem               |
+| GET    | `/messages`              | Lista mensagens com filtros       |
+| GET    | `/messages/:id`          | Detalhes de uma mensagem          |
+| GET    | `/messages/:id/status`   | Status da mensagem                |
+
+### 💬 Conversas
+
+| Método | Rota                                 | Descrição                      |
+|--------|--------------------------------------|--------------------------------|
+| GET    | `/conversations`                     | Lista conversas do cliente     |
+| GET    | `/conversations/:id`                 | Detalhes de uma conversa       |
+| GET    | `/conversations/:id/messages`        | Mensagens da conversa          |
+
+### 📊 Fila
+
+| Método | Rota             | Descrição                              |
+|--------|------------------|----------------------------------------|
+| GET    | `/queue/status`  | Estatísticas da fila (quantidade, etc) |
+
+---
+
+## ✅ Funcionalidades Entregues
+
+- [x] API de CRUD para clientes
+- [x] Autenticação simplificada via CPF/CNPJ
+- [x] Fila em memória com duas prioridades (normal/urgente)
+- [x] Processamento síncrono
+- [x] Validação de saldo ou limite por plano
+- [x] Registro de status de mensagens
+- [x] Atualização de conversas
+- [x] Fila com política de prioridade e anti-starvation
+- [x] Reprocessamento automático de falhas
+- [x] Swagger para testes e documentação
+
+---
+
+## 🧠 Observações Técnicas
+
+- A fila é controlada por um loop com `setInterval` e controlada por `isProcessing`.
+- A estrutura evita starvation com a regra de no máximo 3 mensagens urgentes consecutivas.
+- O reprocessamento automático ocorre em caso de falhas no envio.
+- O cliente é identificado a partir do header `x-client-doc` em todas as rotas protegidas.
+
+---
+
+## 👨‍💻 Autor
+
+**Enzo Bersani**
+
+LinkedIn: [linkedin.com/in/enzobersani](https://www.linkedin.com/in/enzobersani)
+
+GitHub: [github.com/enzobersani](https://github.com/enzobersani)
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
